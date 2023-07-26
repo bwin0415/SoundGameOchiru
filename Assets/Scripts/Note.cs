@@ -27,6 +27,6 @@ public class Note : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(0, -speed * Time.deltaTime, 0);
+        transform.Translate( -speed * Time.deltaTime,0, 0);
     }
 }

@@ -22,7 +22,7 @@ public class JudgmentEffect : MonoBehaviour
         for (int i = 0; i < 20; i++)
         {
             yield return new WaitForSeconds(0.01f);
-            transform.Translate(0, 0.05f, 0);
+            transform.Translate(0.05f, 0, 0);
         }
         Destroy(gameObject);
     }

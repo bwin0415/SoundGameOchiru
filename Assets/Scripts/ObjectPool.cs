@@ -31,8 +31,13 @@ public class ObjectPool : MonoBehaviour
     // 使うときに場所を指定して表示する:poolの中から非表示のオブジェクトを探してくる
     public GameObject GetObj(Vector2 position)
     {
+        // poolの中のものを全部使ってたら? =>新たに生成
+        GameObject newObj = Instantiate(prefabObj, position, Quaternion.identity);
+        newObj.SetActive(false);
+        pool.Add(newObj);
+
         // 使ってないものを探してくる
-        for (int i=0; i< pool.Count; i++)
+        for (int i = pool.Count - 1; i >= 0; i--)
         {
             if (pool[i].activeSelf == false)
             {
@@ -43,10 +48,6 @@ public class ObjectPool : MonoBehaviour
             }
         }
 
-        // poolの中のものを全部使ってたら? =>新たに生成
-        GameObject newObj = Instantiate(prefabObj, position, Quaternion.identity);
-        newObj.SetActive(false);
-        pool.Add(newObj);
         return newObj;
     }
 }

@@ -31,14 +31,14 @@ public class JudgmentArea : MonoBehaviour
             }
             // 一度y座標が小さいもの順で並べ替える(ソートする)
             List<RaycastHit2D> raycastHit2Ds = hits2D.ToList();
-            raycastHit2Ds.Sort((a,b) => (int)(a.transform.position.y - b.transform.position.y));
+            raycastHit2Ds.Sort((a,b) => (int)(a.transform.position.x - b.transform.position.x));
             // 0番目の要素を消す
             RaycastHit2D hit2D = raycastHit2Ds[0];
 
             // RaycastHit2D hit2D = Physics2D.CircleCast(transform.position, radius, Vector3.zero);
             if (hit2D)
             {
-                float distance = Mathf.Abs(hit2D.transform.position.y - transform.position.y);
+                float distance = Mathf.Abs(hit2D.transform.position.x - transform.position.x);
                 if (distance < 3)
                 {
                     gameManager.AddScore(100);
@@ -66,7 +66,7 @@ public class JudgmentArea : MonoBehaviour
 
     void SpawnTextEffect(string message, Vector3 position, Color color)
     {
-        GameObject effect = Instantiate(textEffectPrefab, position+Vector3.up*1.5f, Quaternion.identity);
+        GameObject effect = Instantiate(textEffectPrefab, position+Vector3.right*1.5f, Quaternion.identity);
         JudgmentEffect judgmentEffect = effect.GetComponent<JudgmentEffect>();
         judgmentEffect.SetText(message, color);
     }
