@@ -8,7 +8,8 @@ public class Note : MonoBehaviour
     // TODO:落ちる速度を曲と判定場所との距離から設定する必要がある
     // ・音を１小節分遅らせて鳴らす => ノーツは1小節分早く生成される
     // ・判定場所に来た時に音がなればいい => 速度:判定場所までの距離/1小節の長さ(s)
-    float speed;
+    
+   [SerializeField,Header("4*60/BPM")] public float speed;
 
     //・1小節の時間はいくらか？:BPMから計算する(4*60/BPM)
     // BPM120
@@ -20,13 +21,13 @@ public class Note : MonoBehaviour
     // 70-(-50) => 120
 
 
-    private void Start()
-    {
-        speed = 60; // 120/2
-    }
 
     void Update()
     {
-        transform.Translate( -speed * Time.deltaTime,0, 0);
+        transform.Translate( 0, -speed * Time.deltaTime, 0);
+        if (transform.position.y<-48)
+        {
+            Destroy(this);
+        }
     }
 }

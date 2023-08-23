@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Playables;
+using TMPro;
+using Klak.Timeline.Midi;
 
 public class GameManager : MonoBehaviour
 {
@@ -29,27 +31,39 @@ public class GameManager : MonoBehaviour
 
     //・ゲーム中のスコア表示（スコア機能:未実装）
     [SerializeField] Text scoreText = default;
-    //・タイトルへ（タイトル未実装）
+
+    [SerializeField] TextMeshProUGUI perfectTxt = default;
+    [SerializeField] TextMeshProUGUI missTxt = default;
 
     [SerializeField] PlayableDirector playableDirector;
+    [SerializeField] MidiControl midiControl; // 在 Inspector 中将 MIDI 控制器组件分配给这个字段
 
-    int score;
+
+    int score = 0, pcount = 0, mcount = 0;
 
     void Start()
     {
         StartCoroutine(GameMain());
+        missTxt.text = "0";
+        perfectTxt.text = "0";
     }
 
     IEnumerator GameMain()
     {
+        // 获取BPM值
+        float bpm = midiControl.GetControlValue(0); // 假设 BPM 控制器的 ID 是 0
+
+        // 使用BPM值计算每个节拍的时间间隔
+        float beatInterval = 60f / bpm;
+
         countDownText.text = "3";
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(beatInterval);
         countDownText.text = "2";
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(beatInterval);
         countDownText.text = "1";
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(beatInterval);
         countDownText.text = "GO!";
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(beatInterval * 0.5f);
         countDownText.text = "";
         playableDirector.Play();
     }
@@ -62,6 +76,17 @@ public class GameManager : MonoBehaviour
         scoreText.text = score.ToString();
     }
 
+    public void Addpresut(int point)
+    {
+        pcount += point;
+        perfectTxt.text = pcount.ToString();
+    }
+    public void Addmresut(int point)
+    {
+        mcount += point;
+        missTxt.text = mcount.ToString();
+    }
+
     public void OnEndEvent()
     {
         Debug.Log("ゲーム終了:結果表示");
@@ -71,5 +96,22 @@ public class GameManager : MonoBehaviour
     public void OnRetry()
     {
         SceneManager.LoadScene("SampleScene");
+    }
+
+    public void OnPause()
+    {
+        Debug.Log("ゲーム一時停止");
+        playableDirector.Pause();
+    }
+
+    public void OnSPeedUp()
+    {
+        playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(2);
+
+    }
+    public void OnSPeedDown()
+    {
+        playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0.5f);
+
     }
 }

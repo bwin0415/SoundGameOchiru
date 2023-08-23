@@ -12,14 +12,24 @@ public class JudgmentArea : MonoBehaviour
 
     [SerializeField] float radius;
     [SerializeField] GameManager gameManager = default;
-    [SerializeField] KeyCode keyCode;
+
+    public KeyCode keyCode;
 
     [SerializeField] GameObject textEffectPrefab;
+
+    AudioSource audioSource;
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     private void Update()
     {
         if (Input.GetKeyDown(keyCode))
         {
+
+            playSound();
             // 2つのノーツがきたときに、上のノーツが消えてしまう => 下優先
             // => 複数のノーツを取得して、一番下を消す
             RaycastHit2D[] hits2D = Physics2D.CircleCastAll(transform.position, radius, Vector3.zero);
@@ -31,31 +41,27 @@ public class JudgmentArea : MonoBehaviour
             }
             // 一度y座標が小さいもの順で並べ替える(ソートする)
             List<RaycastHit2D> raycastHit2Ds = hits2D.ToList();
-            raycastHit2Ds.Sort((a,b) => (int)(a.transform.position.x - b.transform.position.x));
+            raycastHit2Ds.Sort((a,b) => (int)(a.transform.position.y - b.transform.position.y));
             // 0番目の要素を消す
             RaycastHit2D hit2D = raycastHit2Ds[0];
 
             // RaycastHit2D hit2D = Physics2D.CircleCast(transform.position, radius, Vector3.zero);
             if (hit2D)
             {
-                float distance = Mathf.Abs(hit2D.transform.position.x - transform.position.x);
-                if (distance < 3)
+                float distance = Mathf.Abs(hit2D.transform.position.y - transform.position.y);
+                if (distance < 1)
                 {
                     gameManager.AddScore(100);
+                    gameManager.Addpresut(1);
                     // ここでEffect
                     SpawnTextEffect("Excellent", hit2D.transform.position, Color.red);
-                }
-                else if (distance < 5)
-                {
-                    gameManager.AddScore(10);
-                    // ここでEffect
-                    SpawnTextEffect("Good", hit2D.transform.position, Color.yellow);
                 }
                 else
                 {
                     gameManager.AddScore(0);
+                    gameManager.Addmresut(1);
                     // ここでEffect
-                    SpawnTextEffect("Bad", hit2D.transform.position, Color.blue);
+                    SpawnTextEffect("Miss", hit2D.transform.position, Color.blue);
                 }
                 // ぶつかったものを破壊する
                 // Destroy(hit2D.collider.gameObject);
@@ -66,7 +72,7 @@ public class JudgmentArea : MonoBehaviour
 
     void SpawnTextEffect(string message, Vector3 position, Color color)
     {
-        GameObject effect = Instantiate(textEffectPrefab, position+Vector3.right*1.5f, Quaternion.identity);
+        GameObject effect = Instantiate(textEffectPrefab, position+Vector3.right*2.5f+Vector3.up*2.5f, Quaternion.identity);
         JudgmentEffect judgmentEffect = effect.GetComponent<JudgmentEffect>();
         judgmentEffect.SetText(message, color);
     }
@@ -76,5 +82,19 @@ public class JudgmentArea : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position, radius);
+    }
+
+    void playSound()
+    {
+        audioSource.Play();
+    }
+
+    public void HandleKeyCode(KeyCode keyCode)
+    {
+        // 在这里根据接收到的按键码执行相应的操作
+        if (keyCode == this.keyCode)
+        {
+            // 在这里执行按键对应的操作逻辑
+        }
     }
 }
