@@ -27,7 +27,7 @@ public class Note : MonoBehaviour
         transform.Translate( 0, -speed * Time.deltaTime, 0);
         if (transform.position.y<-48)
         {
-            Destroy(this);
+             gameObject.SetActive(false); // 将音符设置为非激活状态，以备复用
         }
     }
 }

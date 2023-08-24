@@ -51,7 +51,8 @@ public class GameManager : MonoBehaviour
     IEnumerator GameMain()
     {
         // 获取BPM值
-        float bpm = midiControl.GetControlValue(0); // 假设 BPM 控制器的 ID 是 0
+       //float bpm = midiControl.GetControlValue(0); // 假设 BPM 控制器的 ID 是 0
+        float bpm = 80; // 假设 BPM 控制器的 ID 是 0
 
         // 使用BPM值计算每个节拍的时间间隔
         float beatInterval = 60f / bpm;

@@ -5286,6 +5286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2096556628}
   - component: {fileID: 2096556627}
+  - component: {fileID: 2096556629}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5311,6 +5312,58 @@ MonoBehaviour:
   perfectTxt: {fileID: 976647170}
   missTxt: {fileID: 1029770236}
   playableDirector: {fileID: 1804790944}
+  midiControl:
+    enabled: 1
+    mode: 0
+    noteFilter:
+      note: 0
+      octave: 0
+    envelope:
+      attack: 0
+      decay: 1
+      sustain: 0.5
+      release: 1
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 90
+        outSlope: 90
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.02
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.5
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ccNumber: 1
+    targetComponent:
+      exposedName: 
+      defaultValue: {fileID: 0}
+    propertyName: 
+    fieldName: 
+    vector0: {x: 0, y: 0, z: 0, w: 0}
+    vector1: {x: 1, y: 1, z: 1, w: 0}
 --- !u!4 &2096556628
 Transform:
   m_ObjectHideFlags: 0
@@ -5326,6 +5379,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2096556629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096556626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d764f9605898ee48a14caf246257671, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baudRate: 9600
 --- !u!1 &2132088694
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,7 +19,9 @@ public class JudgmentArea : MonoBehaviour
 
     AudioSource audioSource;
 
-    void Start()
+ 
+
+void Start()
     {
         audioSource = GetComponent<AudioSource>();
     }
@@ -89,12 +91,41 @@ public class JudgmentArea : MonoBehaviour
         audioSource.Play();
     }
 
-    public void HandleKeyCode(KeyCode keyCode)
+    public void HandleButtonPress(KeyCode buttonKeyCode)
     {
-        // 在这里根据接收到的按键码执行相应的操作
-        if (keyCode == this.keyCode)
+        if (buttonKeyCode == keyCode)
         {
-            // 在这里执行按键对应的操作逻辑
+            playSound();
+
+            RaycastHit2D[] hits2D = Physics2D.CircleCastAll(transform.position, radius, Vector3.zero);
+
+            if (hits2D.Length == 0)
+            {
+                return;
+            }
+
+            List<RaycastHit2D> raycastHit2Ds = hits2D.ToList();
+            raycastHit2Ds.Sort((a, b) => (int)(a.transform.position.y - b.transform.position.y));
+            RaycastHit2D hit2D = raycastHit2Ds[0];
+
+            if (hit2D)
+            {
+                float distance = Mathf.Abs(hit2D.transform.position.y - transform.position.y);
+                if (distance < 1)
+                {
+                    gameManager.AddScore(100);
+                    gameManager.Addpresut(1);
+                    SpawnTextEffect("Excellent", hit2D.transform.position, Color.red);
+                }
+                else
+                {
+                    gameManager.AddScore(0);
+                    gameManager.Addmresut(1);
+                    SpawnTextEffect("Miss", hit2D.transform.position, Color.blue);
+                }
+                hit2D.collider.gameObject.SetActive(false);
+            }
         }
     }
+
 }

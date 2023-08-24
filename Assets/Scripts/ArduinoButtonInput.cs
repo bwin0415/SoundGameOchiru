@@ -1,28 +1,29 @@
 ﻿using UnityEngine;
 using System.IO.Ports;
-using System;
-
 
 public class ArduinoButtonInput : MonoBehaviour
 {
-    [SerializeField] string portName = "COM3"; // 串口名称，根据实际情况更改
     [SerializeField] int baudRate = 9600;
 
     private System.IO.Ports.SerialPort serialPort;
-    private JudgmentArea judgmentArea;
-    private KeyCode[] buttonKeyCodes;
+    private JudgmentArea[] judgmentAreas;
 
     void Start()
     {
+        string[] availablePortNames = SerialPort.GetPortNames();
+
+        if (availablePortNames.Length == 0)
+        {
+            Debug.LogError("No available serial ports found.");
+            return;
+        }
+
+        // 取第一个可用的串口名称
+        string portName = availablePortNames[0];
         serialPort = new SerialPort(portName, baudRate);
         serialPort.Open();
 
-        judgmentArea = FindObjectOfType<JudgmentArea>(); // 获取JudgmentArea脚本
-        buttonKeyCodes = new KeyCode[] {
-            KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, // 依次映射按钮0、按钮1、按钮2到不同的KeyCode
-            KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6,
-            KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9
-        };
+        judgmentAreas = FindObjectsOfType<JudgmentArea>(); // 获取所有 JudgmentArea 脚本的实例
     }
 
     void Update()
@@ -30,6 +31,7 @@ public class ArduinoButtonInput : MonoBehaviour
         if (serialPort.IsOpen && serialPort.BytesToRead > 0)
         {
             string data = serialPort.ReadLine();
+            Debug.Log("Received data from Arduino: " + data);
             string[] buttonStates = data.Trim().Split(',');
 
             for (int i = 0; i < buttonStates.Length; i++)
@@ -38,6 +40,7 @@ public class ArduinoButtonInput : MonoBehaviour
 
                 if (buttonState == 1)
                 {
+                    Debug.Log("Button " + i + " pressed");
                     HandleButtonPress(i);
                 }
             }
@@ -46,12 +49,19 @@ public class ArduinoButtonInput : MonoBehaviour
 
     void HandleButtonPress(int buttonIndex)
     {
-        if (buttonIndex >= 0 && buttonIndex < buttonKeyCodes.Length)
-        {
-            KeyCode correspondingKeyCode = buttonKeyCodes[buttonIndex];
+        KeyCode[] unityKeyCodes = {
+            KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.F,
+            KeyCode.Space, KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L
+        };
 
-            // 在这里调用JudgmentArea中的方法，传递对应的KeyCode
-            judgmentArea.HandleKeyCode(correspondingKeyCode);
+        if (buttonIndex >= 0 && buttonIndex < unityKeyCodes.Length)
+        {
+            KeyCode correspondingKeyCode = unityKeyCodes[buttonIndex];
+            // 遍历所有 JudgmentArea 实例，调用 HandleButtonPress 方法传递对应的 KeyCode
+            foreach (var judgmentArea in judgmentAreas)
+            {
+                judgmentArea.HandleButtonPress(correspondingKeyCode);
+            }
         }
     }
 
@@ -63,9 +73,3 @@ public class ArduinoButtonInput : MonoBehaviour
         }
     }
 }
-
-
-
-
-
-

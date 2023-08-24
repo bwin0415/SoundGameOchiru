@@ -12,7 +12,7 @@ public class NoteGenerator : MonoBehaviour
 
     private void Awake()
     {
-        objectPool.CreatePool(10);
+        objectPool.CreatePool(15);
     }
 
     public void SpawnNote(Vector3 pos)
